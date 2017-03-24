@@ -3,10 +3,12 @@ package wtf.meier.circledvectoricon;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -32,6 +34,7 @@ public class CircledVectorIcon extends FrameLayout {
 
     public CircledVectorIcon(@NonNull Context context) {
         this(context, null);
+        inflateViewAndBind(context);
     }
 
     public CircledVectorIcon(
@@ -78,6 +81,17 @@ public class CircledVectorIcon extends FrameLayout {
 
             attributeArray.recycle();
         }
+    }
+
+    public CircledVectorIcon(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        inflateViewAndBind(context);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public CircledVectorIcon(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        inflateViewAndBind(context);
     }
 
     void inflateViewAndBind(Context context) {
