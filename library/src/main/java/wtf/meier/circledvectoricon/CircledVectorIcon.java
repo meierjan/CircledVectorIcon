@@ -39,46 +39,48 @@ public class CircledVectorIcon extends FrameLayout {
     ) {
         super(context, attrs);
 
-        inflateView(context);
+        inflateViewAndBind(context);
 
-        TypedArray attributeArray = context.obtainStyledAttributes(attrs, R.styleable.CircledVectorIcon);
+        if(attrs != null) {
+            TypedArray attributeArray = context.obtainStyledAttributes(attrs, R.styleable.CircledVectorIcon);
 
-        final @DrawableRes int innerDrawableResId =
-                attributeArray.getResourceId(R.styleable.CircledVectorIcon_drawable, UNDEFINED);
+            final @DrawableRes int innerDrawableResId =
+                    attributeArray.getResourceId(R.styleable.CircledVectorIcon_drawable, UNDEFINED);
 
-        final @ColorRes int drawableColorRes =
-                attributeArray.getResourceId(R.styleable.CircledVectorIcon_drawableColor, UNDEFINED);
+            final @ColorRes int drawableColorRes =
+                    attributeArray.getResourceId(R.styleable.CircledVectorIcon_drawableColor, UNDEFINED);
 
-        final @ColorRes int circleColorRes =
-                attributeArray.getResourceId(R.styleable.CircledVectorIcon_circleColor, UNDEFINED);
+            final @ColorRes int circleColorRes =
+                    attributeArray.getResourceId(R.styleable.CircledVectorIcon_circleColor, UNDEFINED);
 
-        if (circleColorRes != UNDEFINED) {
-            Drawable drawable = DrawableCompat.wrap(circleView.getDrawable());
-            DrawableCompat.setTint(drawable,
-                    ContextCompat.getColor(getContext(), circleColorRes)
-            );
-        }
-
-        if (innerDrawableResId != UNDEFINED) {
-            VectorDrawableCompat vectorDrawableCompat =
-                    VectorDrawableCompat.create(getResources(), innerDrawableResId, context.getTheme());
-
-            if (vectorDrawableCompat != null) {
-                if (drawableColorRes != UNDEFINED) {
-                    DrawableCompat.setTint(vectorDrawableCompat,
-                            ContextCompat.getColor(getContext(), drawableColorRes)
-                    );
-                }
-                imageView.setImageDrawable(vectorDrawableCompat);
-            } else {
-                Log.d(TAG, "drawable is null", new NullPointerException("drawable is null"));
+            if (circleColorRes != UNDEFINED) {
+                Drawable drawable = DrawableCompat.wrap(circleView.getDrawable());
+                DrawableCompat.setTint(drawable,
+                        ContextCompat.getColor(getContext(), circleColorRes)
+                );
             }
-        }
 
-        attributeArray.recycle();
+            if (innerDrawableResId != UNDEFINED) {
+                VectorDrawableCompat vectorDrawableCompat =
+                        VectorDrawableCompat.create(getResources(), innerDrawableResId, context.getTheme());
+
+                if (vectorDrawableCompat != null) {
+                    if (drawableColorRes != UNDEFINED) {
+                        DrawableCompat.setTint(vectorDrawableCompat,
+                                ContextCompat.getColor(getContext(), drawableColorRes)
+                        );
+                    }
+                    imageView.setImageDrawable(vectorDrawableCompat);
+                } else {
+                    Log.d(TAG, "drawable is null", new NullPointerException("drawable is null"));
+                }
+            }
+
+            attributeArray.recycle();
+        }
     }
 
-    void inflateView(Context context) {
+    void inflateViewAndBind(Context context) {
         LayoutInflater.from(context).inflate(R.layout.custom_white_circle_image, this);
         imageView = (AppCompatImageView) findViewById(R.id.circle_imageview);
         circleView = (AppCompatImageView) findViewById(R.id.circle_circleview);
