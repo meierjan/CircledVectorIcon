@@ -38,7 +38,7 @@ vectorDrawables.useSupportLibrary = true
 
 
 # Compatibility
-This library is tested on a Samsung Galaxy S III (Android 4.3) and a Nexus 5X (7.1).
+This library is tested on a _Samsung Galaxy S II mini_ (Android 4.1.2), a _Samsung Galaxy S III_ (Android 4.3) and a _Nexus 5X_ (7.1).
 
 # Screenshot
 This is a screenshot of the example.
