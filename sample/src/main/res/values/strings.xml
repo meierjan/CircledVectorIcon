@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CircledVectorIcon</string>
+    <string name="change_the_image_padding">Change the Image-Padding:</string>
+    <string name="current_percentage_value_display">Padding Value: %2$.2f (%1$d%%)</string>
 </resources>
