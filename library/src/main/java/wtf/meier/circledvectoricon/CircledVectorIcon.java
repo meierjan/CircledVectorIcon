@@ -3,7 +3,7 @@ package wtf.meier.circledvectoricon;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -14,7 +14,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Guideline;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -113,14 +112,12 @@ public class CircledVectorIcon extends FrameLayout {
     }
 
     public CircledVectorIcon setDrawableColor(@ColorRes int colorRes) {
-        changeColorOfVectorDrawable(imageView.getDrawable(), colorRes);
-        imageView.invalidate();
+        imageView.setColorFilter(ContextCompat.getColor(getContext(), colorRes), PorterDuff.Mode.SRC_IN);
         return this;
     }
 
     public CircledVectorIcon setCircleColor(@ColorRes int colorRes) {
-        changeColorOfVectorDrawable(circleView.getDrawable(), colorRes);
-        circleView.invalidate();
+        circleView.setColorFilter(ContextCompat.getColor(getContext(), colorRes), PorterDuff.Mode.SRC_IN);
         return this;
     }
 
@@ -152,12 +149,5 @@ public class CircledVectorIcon extends FrameLayout {
             lp.guidePercent = newPercentage;
             guideline.setLayoutParams(lp);
         }
-    }
-
-    private void changeColorOfVectorDrawable(Drawable drawableToChange, @ColorRes int colorRes) {
-        Drawable drawable = DrawableCompat.wrap(drawableToChange);
-        DrawableCompat.setTint(drawable,
-                ContextCompat.getColor(getContext(), colorRes)
-        );
     }
 }
