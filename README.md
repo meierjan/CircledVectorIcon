@@ -37,7 +37,7 @@ Add it in your root build.gradle at the end of repositories:
 Step 2. Add the dependency
 ```gradle
     dependencies {
-        compile 'com.github.meierjan:CircledVectorIcon:0.2.1'
+        compile 'com.github.meierjan:CircledVectorIcon:0.2.3'
     }
 ```
 
