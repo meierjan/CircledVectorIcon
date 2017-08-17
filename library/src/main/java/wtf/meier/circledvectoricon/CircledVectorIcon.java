@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -26,6 +27,7 @@ import android.widget.FrameLayout;
 
 public class CircledVectorIcon extends FrameLayout {
 
+    @FloatRange(from = 0, to = .5)
     public static final float DEFAULT_PADDING_IN_PERCENT = 0.2f;
 
     private static final int UNDEFINED = -1;
@@ -41,17 +43,30 @@ public class CircledVectorIcon extends FrameLayout {
 
 
     public CircledVectorIcon(@NonNull Context context) {
-        this(context, null);
-        inflateViewAndBind(context);
+        super(context);
+        init(context, null);
     }
 
     public CircledVectorIcon(
             @NonNull Context context, @Nullable AttributeSet attrs
     ) {
         super(context, attrs);
+        init(context, attrs);
+    }
 
+    public CircledVectorIcon(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context, attrs);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public CircledVectorIcon(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init(context, attrs);
+    }
+
+    void init(@NonNull Context context, @Nullable AttributeSet attrs) {
         inflateViewAndBind(context);
-
         if (attrs != null) {
             TypedArray attributeArray = context.obtainStyledAttributes(attrs, R.styleable.CircledVectorIcon);
 
@@ -64,7 +79,10 @@ public class CircledVectorIcon extends FrameLayout {
             final @ColorRes int circleColorRes =
                     attributeArray.getResourceId(R.styleable.CircledVectorIcon_circleColor, UNDEFINED);
 
-            final float imagePaddingPercentage = attributeArray.getFloat(R.styleable.CircledVectorIcon_imagePaddingPercentage, DEFAULT_PADDING_IN_PERCENT);
+            final float imagePaddingPercentage = attributeArray.getFloat(
+                    R.styleable.CircledVectorIcon_imagePaddingPercentage,
+                    DEFAULT_PADDING_IN_PERCENT
+            );
 
             setImageSidePaddingInPercent(imagePaddingPercentage);
 
@@ -81,18 +99,6 @@ public class CircledVectorIcon extends FrameLayout {
 
             attributeArray.recycle();
         }
-    }
-
-    // TODO: support this constructor
-    public CircledVectorIcon(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        inflateViewAndBind(context);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public CircledVectorIcon(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        inflateViewAndBind(context);
     }
 
     void inflateViewAndBind(Context context) {
@@ -130,7 +136,7 @@ public class CircledVectorIcon extends FrameLayout {
      * @throws IllegalArgumentException if percentage outside range 0.0f - 0.5f
      */
     @SuppressLint("DefaultLocale")
-    public CircledVectorIcon setImageSidePaddingInPercent(float percentage) {
+    public CircledVectorIcon setImageSidePaddingInPercent(@FloatRange(from = 0, to = .5) float percentage) {
         if (percentage < 0 || percentage > 0.5) {
             throw new IllegalArgumentException(String.format("Provided percentage '%f' is not within range 0.0f - 0.5f", percentage));
         }
@@ -143,7 +149,7 @@ public class CircledVectorIcon extends FrameLayout {
     /**
      * @throws IllegalArgumentException if percentage outside range 0.0f - 1.0f
      */
-    private void changePercentageForGuidelines(float newPercentage, Guideline... guidelines) {
+    private void changePercentageForGuidelines(@FloatRange(from = 0, to = 1) float newPercentage, Guideline... guidelines) {
         if (newPercentage < 0 || newPercentage > 1) {
             throw new IllegalArgumentException("guideline-percentage must be within 0 and 0.5");
         }
@@ -156,7 +162,8 @@ public class CircledVectorIcon extends FrameLayout {
 
     private void changeColorOfVectorDrawable(Drawable drawableToChange, @ColorRes int colorRes) {
         Drawable drawable = DrawableCompat.wrap(drawableToChange);
-        DrawableCompat.setTint(drawable,
+        DrawableCompat.setTint(
+                drawable,
                 ContextCompat.getColor(getContext(), colorRes)
         );
     }
