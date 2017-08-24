@@ -24,13 +24,21 @@ import android.widget.FrameLayout;
 
 /**
  * Created by meier on 20/03/2017.
+ * <p>
+ * This {@link CircledVectorIcon} provides a basic implementation for cases where you want to display
+ * a VectorDrawable inside of a colored circle.
  */
-
 public class CircledVectorIcon extends FrameLayout {
 
+    /**
+     * the icon-side-padding that is applied if nothing else is specified
+     */
     @FloatRange(from = 0, to = .5)
     public static final float DEFAULT_PADDING_IN_PERCENT = 0.2f;
 
+    /**
+     * constant for resource values that are not defined
+     */
     private static final int UNDEFINED = -1;
 
     private AppCompatImageView circleImageView;
@@ -66,12 +74,12 @@ public class CircledVectorIcon extends FrameLayout {
         init(context, attrs);
     }
 
-    void init(@NonNull Context context, @Nullable AttributeSet attrs) {
+    private void init(@NonNull Context context, @Nullable AttributeSet attrs) {
         inflateViewAndBind(context);
 
-        // set here (rather then in the xml) because we want to wrap it with
+        // resource set here (rather then in the xml) because we want to wrap it with
         // DrawableCompat.wrap() so we can tint it across api-levels
-        setCircleToCircleImageView();
+        initializeCircleImageView();
 
         if (attrs != null) {
             TypedArray attributeArray = context.obtainStyledAttributes(attrs, R.styleable.CircledVectorIcon);
@@ -107,7 +115,14 @@ public class CircledVectorIcon extends FrameLayout {
         }
     }
 
-    void inflateViewAndBind(Context context) {
+    private void initializeCircleImageView() {
+        Drawable circle = ResourcesCompat.getDrawable(getResources(), R.drawable.circle_white, null);
+        assert circle != null : "the background-circle could not be loaded from resources";
+        Drawable wrappedCircle = DrawableCompat.wrap(circle.mutate());
+        circleImageView.setImageDrawable(wrappedCircle);
+    }
+
+    private void inflateViewAndBind(Context context) {
         LayoutInflater.from(context).inflate(R.layout.custom_white_circle_image, this);
         iconImageView = (AppCompatImageView) findViewById(R.id.circle_imageview);
         circleImageView = (AppCompatImageView) findViewById(R.id.circle_circleview);
@@ -117,19 +132,40 @@ public class CircledVectorIcon extends FrameLayout {
         guidelineBottom = (Guideline) findViewById(R.id.guideline_outer_bottom);
     }
 
+    /**
+     * Changes the icon to the specified drawable. Please note that the previous set colors will not
+     * be applied automatically.
+     *
+     * @param drawable the drawable to show
+     * @throws IllegalAccessException if the provided drawable is not a vector
+     */
     public CircledVectorIcon setVectorDrawable(@DrawableRes int drawable) {
         VectorDrawableCompat vectorDrawableCompat =
                 VectorDrawableCompat.create(getResources(), drawable, getContext().getTheme());
+        if (vectorDrawableCompat == null) {
+            throw new IllegalArgumentException("drawable resources have to be an vector-drawable");
+        }
         iconImageView.setImageDrawable(vectorDrawableCompat);
         return this;
     }
 
+
+    /**
+     * changes the color of the icon in the foreground
+     *
+     * @param colorRes the color to change the background to
+     */
     public CircledVectorIcon setDrawableColor(@ColorRes int colorRes) {
         changeColorOfVectorDrawable(iconImageView.getDrawable(), colorRes);
         iconImageView.invalidate();
         return this;
     }
 
+    /**
+     * changes the color of the circle in the background
+     *
+     * @param colorRes the color to change the background to
+     */
     public CircledVectorIcon setCircleColor(@ColorRes int colorRes) {
         changeColorOfVectorDrawable(circleImageView.getDrawable(), colorRes);
         circleImageView.invalidate();
@@ -137,6 +173,8 @@ public class CircledVectorIcon extends FrameLayout {
     }
 
     /**
+     * sets the padding around the {@link Drawable} set by {{@link #setVectorDrawable(int)}} in percent
+     *
      * @param percentage should be in range 0.0f - 0.5f where 0.0f is 0% and 0.5f is 50% - remember
      *                   it's padding so its applied to each side
      * @throws IllegalArgumentException if percentage outside range 0.0f - 0.5f
@@ -171,12 +209,5 @@ public class CircledVectorIcon extends FrameLayout {
                 drawableToChange,
                 ContextCompat.getColor(getContext(), colorRes)
         );
-    }
-
-    public void setCircleToCircleImageView() {
-        Drawable circle = ResourcesCompat.getDrawable(getResources(), R.drawable.circle_white, null);
-        assert circle != null : "the background-circle could not be loaded from resources";
-        Drawable wrappedCircle = DrawableCompat.wrap(circle.mutate());
-        circleImageView.setImageDrawable(wrappedCircle);
     }
 }
