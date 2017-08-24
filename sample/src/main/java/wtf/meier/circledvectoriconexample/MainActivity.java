@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -17,6 +18,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private CircledVectorIcon circleVectorIcon;
     private SeekBar paddingSeekBar;
 
+    private ImageView globalStateWatchingIcon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         this.circleVectorIcon = (CircledVectorIcon) findViewById(R.id.circleVectorIcon);
         circleVectorIcon.setOnClickListener(this);
+
+        this.globalStateWatchingIcon = (ImageView) findViewById(R.id.global_state_bike_icon);
 
         this.currentValueDisplayTextView = (TextView) findViewById(R.id.currentValueDisplay);
         currentValueDisplayTextView.setText(getString(R.string.current_percentage_value_display, initialPercentageInt, initialPercentageFloat));
@@ -42,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         circleVectorIcon.setDrawableColor(isColorToggle ? R.color.colorPrimary : R.color.colorAccent);
         circleVectorIcon.setCircleColor(isColorToggle ? R.color.colorAccent : R.color.colorPrimary);
+        globalStateWatchingIcon.invalidate();
         isColorToggle = !isColorToggle;
     }
 
