@@ -15,6 +15,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Guideline;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
@@ -32,8 +33,8 @@ public class CircledVectorIcon extends FrameLayout {
 
     private static final int UNDEFINED = -1;
 
-    private AppCompatImageView circleView;
-    private AppCompatImageView imageView;
+    private AppCompatImageView circleImageView;
+    private AppCompatImageView iconImageView;
 
 
     private Guideline guidelineLeft;
@@ -67,6 +68,11 @@ public class CircledVectorIcon extends FrameLayout {
 
     void init(@NonNull Context context, @Nullable AttributeSet attrs) {
         inflateViewAndBind(context);
+
+        // set here (rather then in the xml) because we want to wrap it with
+        // DrawableCompat.wrap() so we can tint it across api-levels
+        setCircleToCircleImageView();
+
         if (attrs != null) {
             TypedArray attributeArray = context.obtainStyledAttributes(attrs, R.styleable.CircledVectorIcon);
 
@@ -103,8 +109,8 @@ public class CircledVectorIcon extends FrameLayout {
 
     void inflateViewAndBind(Context context) {
         LayoutInflater.from(context).inflate(R.layout.custom_white_circle_image, this);
-        imageView = (AppCompatImageView) findViewById(R.id.circle_imageview);
-        circleView = (AppCompatImageView) findViewById(R.id.circle_circleview);
+        iconImageView = (AppCompatImageView) findViewById(R.id.circle_imageview);
+        circleImageView = (AppCompatImageView) findViewById(R.id.circle_circleview);
         guidelineLeft = (Guideline) findViewById(R.id.guideline_outer_left);
         guidelineRight = (Guideline) findViewById(R.id.guideline_outer_right);
         guidelineTop = (Guideline) findViewById(R.id.guideline_outer_top);
@@ -114,19 +120,19 @@ public class CircledVectorIcon extends FrameLayout {
     public CircledVectorIcon setVectorDrawable(@DrawableRes int drawable) {
         VectorDrawableCompat vectorDrawableCompat =
                 VectorDrawableCompat.create(getResources(), drawable, getContext().getTheme());
-        imageView.setImageDrawable(vectorDrawableCompat);
+        iconImageView.setImageDrawable(vectorDrawableCompat);
         return this;
     }
 
     public CircledVectorIcon setDrawableColor(@ColorRes int colorRes) {
-        changeColorOfVectorDrawable(imageView.getDrawable(), colorRes);
-        imageView.invalidate();
+        changeColorOfVectorDrawable(iconImageView.getDrawable(), colorRes);
+        iconImageView.invalidate();
         return this;
     }
 
     public CircledVectorIcon setCircleColor(@ColorRes int colorRes) {
-        changeColorOfVectorDrawable(circleView.getDrawable(), colorRes);
-        circleView.invalidate();
+        changeColorOfVectorDrawable(circleImageView.getDrawable(), colorRes);
+        circleImageView.invalidate();
         return this;
     }
 
@@ -161,10 +167,16 @@ public class CircledVectorIcon extends FrameLayout {
     }
 
     private void changeColorOfVectorDrawable(Drawable drawableToChange, @ColorRes int colorRes) {
-        Drawable drawable = DrawableCompat.wrap(drawableToChange);
         DrawableCompat.setTint(
-                drawable,
+                drawableToChange,
                 ContextCompat.getColor(getContext(), colorRes)
         );
+    }
+
+    public void setCircleToCircleImageView() {
+        Drawable circle = ResourcesCompat.getDrawable(getResources(), R.drawable.circle_white, null);
+        assert circle != null : "the background-circle could not be loaded from resources";
+        Drawable wrappedCircle = DrawableCompat.wrap(circle.mutate());
+        circleImageView.setImageDrawable(wrappedCircle);
     }
 }
