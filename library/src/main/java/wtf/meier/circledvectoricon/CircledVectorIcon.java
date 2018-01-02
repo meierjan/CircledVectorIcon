@@ -92,13 +92,13 @@ public class CircledVectorIcon extends FrameLayout {
                     attributeArray.getResourceId(R.styleable.CircledVectorIcon_drawableColorRes, UNDEFINED);
 
             final @ColorInt int drawableColor =
-                    attributeArray.getResourceId(R.styleable.CircledVectorIcon_drawableColorValue, UNDEFINED);
+                    attributeArray.getColor(R.styleable.CircledVectorIcon_drawableColorValue, UNDEFINED);
 
             final @ColorRes int circleColorRes =
                     attributeArray.getResourceId(R.styleable.CircledVectorIcon_circleColorRes, UNDEFINED);
 
             final @ColorInt int circleColor =
-                    attributeArray.getResourceId(R.styleable.CircledVectorIcon_circleColorValue, UNDEFINED);
+                    attributeArray.getColor(R.styleable.CircledVectorIcon_circleColorValue, UNDEFINED);
 
             final float imagePaddingPercentage = attributeArray.getFloat(
                     R.styleable.CircledVectorIcon_imagePaddingPercentage,
