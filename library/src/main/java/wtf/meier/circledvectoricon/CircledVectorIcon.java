@@ -89,10 +89,16 @@ public class CircledVectorIcon extends FrameLayout {
                     attributeArray.getResourceId(R.styleable.CircledVectorIcon_drawable, UNDEFINED);
 
             final @ColorRes int drawableColorRes =
-                    attributeArray.getResourceId(R.styleable.CircledVectorIcon_drawableColor, UNDEFINED);
+                    attributeArray.getResourceId(R.styleable.CircledVectorIcon_drawableColorRes, UNDEFINED);
+
+            final @ColorInt int drawableColor =
+                    attributeArray.getResourceId(R.styleable.CircledVectorIcon_drawableColorValue, UNDEFINED);
 
             final @ColorRes int circleColorRes =
-                    attributeArray.getResourceId(R.styleable.CircledVectorIcon_circleColor, UNDEFINED);
+                    attributeArray.getResourceId(R.styleable.CircledVectorIcon_circleColorRes, UNDEFINED);
+
+            final @ColorInt int circleColor =
+                    attributeArray.getResourceId(R.styleable.CircledVectorIcon_circleColorValue, UNDEFINED);
 
             final float imagePaddingPercentage = attributeArray.getFloat(
                     R.styleable.CircledVectorIcon_imagePaddingPercentage,
@@ -103,12 +109,16 @@ public class CircledVectorIcon extends FrameLayout {
 
             if (circleColorRes != UNDEFINED) {
                 setCircleColor(circleColorRes);
+            } else if (circleColor != UNDEFINED) {
+                setCircleColorInt(circleColor);
             }
 
             if (innerDrawableResId != UNDEFINED) {
                 setVectorDrawable(innerDrawableResId);
                 if (drawableColorRes != UNDEFINED) {
                     setDrawableColor(drawableColorRes);
+                } else if (drawableColor != UNDEFINED) {
+                    setCircleColorInt(drawableColor);
                 }
             }
 

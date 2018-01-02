@@ -9,8 +9,8 @@ The icon-color, circle-color and the icon itself can be specified via xml. Addit
         android:layout_width="70dp"
         android:layout_height="70dp"
         app:drawable="@drawable/icon_bike"
-        app:drawableColor="@color/colorPrimary"
-        app:circleColor="@color/colorAccent"
+        app:drawableColorRes="@color/colorPrimary"
+        app:circleColorRes="@color/colorAccent"
         app:imagePaddingPercentage="0.2"
         />
 ```
