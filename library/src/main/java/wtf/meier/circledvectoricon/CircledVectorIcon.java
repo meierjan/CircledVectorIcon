@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.FloatRange;
@@ -124,12 +125,12 @@ public class CircledVectorIcon extends FrameLayout {
 
     private void inflateViewAndBind(Context context) {
         LayoutInflater.from(context).inflate(R.layout.custom_white_circle_image, this);
-        iconImageView = (AppCompatImageView) findViewById(R.id.circle_imageview);
-        circleImageView = (AppCompatImageView) findViewById(R.id.circle_circleview);
-        guidelineLeft = (Guideline) findViewById(R.id.guideline_outer_left);
-        guidelineRight = (Guideline) findViewById(R.id.guideline_outer_right);
-        guidelineTop = (Guideline) findViewById(R.id.guideline_outer_top);
-        guidelineBottom = (Guideline) findViewById(R.id.guideline_outer_bottom);
+        iconImageView = findViewById(R.id.circle_imageview);
+        circleImageView = findViewById(R.id.circle_circleview);
+        guidelineLeft = findViewById(R.id.guideline_outer_left);
+        guidelineRight = findViewById(R.id.guideline_outer_right);
+        guidelineTop = findViewById(R.id.guideline_outer_top);
+        guidelineBottom = findViewById(R.id.guideline_outer_bottom);
     }
 
     /**
@@ -156,7 +157,18 @@ public class CircledVectorIcon extends FrameLayout {
      * @param colorRes the color to change the background to
      */
     public CircledVectorIcon setDrawableColor(@ColorRes int colorRes) {
-        changeColorOfVectorDrawable(iconImageView.getDrawable(), colorRes);
+        changeColorOfVectorDrawableWithColorRes(iconImageView.getDrawable(), colorRes);
+        iconImageView.invalidate();
+        return this;
+    }
+
+    /**
+     * changes the color of the icon in the foreground
+     *
+     * @param colorInt the color to change the background to
+     */
+    public CircledVectorIcon setDrawableColorInt(@ColorInt int colorInt) {
+        changeColorOfVectorDrawableWithColorInt(iconImageView.getDrawable(), colorInt);
         iconImageView.invalidate();
         return this;
     }
@@ -167,7 +179,18 @@ public class CircledVectorIcon extends FrameLayout {
      * @param colorRes the color to change the background to
      */
     public CircledVectorIcon setCircleColor(@ColorRes int colorRes) {
-        changeColorOfVectorDrawable(circleImageView.getDrawable(), colorRes);
+        changeColorOfVectorDrawableWithColorRes(circleImageView.getDrawable(), colorRes);
+        circleImageView.invalidate();
+        return this;
+    }
+
+    /**
+     * changes the color of the circle in the background
+     *
+     * @param colorInt the color to change the background to
+     */
+    public CircledVectorIcon setCircleColorInt(@ColorInt int colorInt) {
+        changeColorOfVectorDrawableWithColorInt(circleImageView.getDrawable(), colorInt);
         circleImageView.invalidate();
         return this;
     }
@@ -180,7 +203,7 @@ public class CircledVectorIcon extends FrameLayout {
      * @throws IllegalArgumentException if percentage outside range 0.0f - 0.5f
      */
     @SuppressLint("DefaultLocale")
-    public CircledVectorIcon setImageSidePaddingInPercent(@FloatRange(from = 0, to = .5) float percentage) {
+    public CircledVectorIcon setImageSidePaddingInPercent(@FloatRange(from = 0F, to = .5F) float percentage) {
         if (percentage < 0 || percentage > 0.5) {
             throw new IllegalArgumentException(String.format("Provided percentage '%f' is not within range 0.0f - 0.5f", percentage));
         }
@@ -204,10 +227,14 @@ public class CircledVectorIcon extends FrameLayout {
         }
     }
 
-    private void changeColorOfVectorDrawable(Drawable drawableToChange, @ColorRes int colorRes) {
+    private void changeColorOfVectorDrawableWithColorRes(Drawable drawableToChange, @ColorRes int colorRes) {
+        changeColorOfVectorDrawableWithColorInt(drawableToChange, ContextCompat.getColor(getContext(), colorRes));
+    }
+
+    private void changeColorOfVectorDrawableWithColorInt(Drawable drawableToChange, @ColorInt int colorInt) {
         DrawableCompat.setTint(
                 drawableToChange,
-                ContextCompat.getColor(getContext(), colorRes)
+                colorInt
         );
     }
 }
