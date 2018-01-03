@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -31,6 +33,9 @@ import android.widget.FrameLayout;
  */
 public class CircledVectorIcon extends FrameLayout {
 
+    private static final String STATE_SUPER = "STATE_SUPER";
+    private static final String STATE_CURRENT_COLOR = "STATE_CURRENT_COLOR";
+
     /**
      * the icon-side-padding that is applied if nothing else is specified
      */
@@ -50,6 +55,9 @@ public class CircledVectorIcon extends FrameLayout {
     private Guideline guidelineRight;
     private Guideline guidelineTop;
     private Guideline guidelineBottom;
+
+    @ColorInt
+    private int currentColor = UNDEFINED;
 
 
     public CircledVectorIcon(@NonNull Context context) {
@@ -144,22 +152,30 @@ public class CircledVectorIcon extends FrameLayout {
     }
 
     /**
-     * Changes the icon to the specified drawable. Please note that the previous set colors will not
-     * be applied automatically.
+     * Changes the icon to the specified drawable.
      *
      * @param drawable the drawable to show
      * @throws IllegalAccessException if the provided drawable is not a vector
      */
     public CircledVectorIcon setVectorDrawable(@DrawableRes int drawable) {
-        VectorDrawableCompat vectorDrawableCompat =
-                VectorDrawableCompat.create(getResources(), drawable, getContext().getTheme());
-        if (vectorDrawableCompat == null) {
-            throw new IllegalArgumentException("drawable resources have to be an vector-drawable");
-        }
-        iconImageView.setImageDrawable(vectorDrawableCompat);
+        setVectorDrawableAndApplyCurrentTint(drawable);
         return this;
     }
 
+    private void setVectorDrawableAndApplyCurrentTint(@DrawableRes int drawable) {
+        VectorDrawableCompat vectorDrawableCompat =
+                VectorDrawableCompat.create(getResources(), drawable, getContext().getTheme());
+
+        if (vectorDrawableCompat == null) {
+            throw new IllegalArgumentException("drawable resources have to be an vector-drawable");
+        }
+
+        iconImageView.setImageDrawable(vectorDrawableCompat);
+
+        if (currentColor != UNDEFINED) {
+            changeColorOfVectorDrawableWithColorInt(vectorDrawableCompat, currentColor);
+        }
+    }
 
     /**
      * changes the color of the icon in the foreground
@@ -242,9 +258,32 @@ public class CircledVectorIcon extends FrameLayout {
     }
 
     private void changeColorOfVectorDrawableWithColorInt(Drawable drawableToChange, @ColorInt int colorInt) {
+        currentColor = colorInt;
         DrawableCompat.setTint(
                 drawableToChange,
                 colorInt
         );
+    }
+
+    @Nullable
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(STATE_SUPER, super.onSaveInstanceState());
+        bundle.putInt(STATE_CURRENT_COLOR, this.currentColor);
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        final Parcelable stateWithoutCurrentState;
+        if (state instanceof Bundle) {
+            Bundle circledVectorIconState = ((Bundle) state);
+            this.currentColor = circledVectorIconState.getInt(STATE_CURRENT_COLOR, UNDEFINED);
+            stateWithoutCurrentState = circledVectorIconState.getParcelable(STATE_SUPER);
+        } else {
+            stateWithoutCurrentState = state;
+        }
+        super.onRestoreInstanceState(stateWithoutCurrentState);
     }
 }
