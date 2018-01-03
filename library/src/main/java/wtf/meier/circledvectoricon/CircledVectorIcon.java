@@ -260,7 +260,7 @@ public class CircledVectorIcon extends FrameLayout {
     private void changeColorOfVectorDrawableWithColorInt(Drawable drawableToChange, @ColorInt int colorInt) {
         currentColor = colorInt;
         DrawableCompat.setTint(
-                drawableToChange,
+                DrawableCompat.wrap(drawableToChange.mutate()),
                 colorInt
         );
     }
