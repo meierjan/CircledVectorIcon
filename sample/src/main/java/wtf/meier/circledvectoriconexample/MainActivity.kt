@@ -26,16 +26,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, SeekBar.OnSeekBa
         val initialPercentageFloat = CircledVectorIcon.DEFAULT_PADDING_IN_PERCENT
         val initialPercentageInt = (initialPercentageFloat * 100).toInt()
 
-        this.circleVectorIcon = findViewById(R.id.circleVectorIcon)
-        circleVectorIcon.setOnClickListener(this)
+        this.circleVectorIcon = findViewById<CircledVectorIcon>(R.id.circleVectorIcon).apply {
+            setOnClickListener(this@MainActivity)
+        }
 
         this.globalStateWatchingIcon = findViewById(R.id.global_state_bike_icon)
 
-        this.currentValueDisplayTextView = findViewById(R.id.currentValueDisplay)
-        currentValueDisplayTextView.text = getString(R.string.current_percentage_value_display, initialPercentageInt, initialPercentageFloat)
+        this.currentValueDisplayTextView = findViewById<TextView>(R.id.currentValueDisplay).apply {
+            text = getString(R.string.current_percentage_value_display, initialPercentageInt, initialPercentageFloat)
+        }
 
-        this.paddingSeekBar = findViewById(R.id.imagePaddingSeekBar)
-        paddingSeekBar.apply {
+        this.paddingSeekBar = findViewById<SeekBar>(R.id.imagePaddingSeekBar).apply {
             progress = initialPercentageInt
             max = 50
             setOnSeekBarChangeListener(this@MainActivity)
