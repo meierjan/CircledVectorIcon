@@ -118,7 +118,7 @@ public class CircledVectorIcon extends FrameLayout {
                 if (drawableColorRes != UNDEFINED) {
                     setDrawableColor(drawableColorRes);
                 } else if (drawableColor != UNDEFINED) {
-                    setCircleColorInt(drawableColor);
+                    setDrawableColorInt(drawableColor);
                 }
             }
 
